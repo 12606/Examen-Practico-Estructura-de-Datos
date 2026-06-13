@@ -1,4 +1,4 @@
-Algoritmos sobre Grafos con Spring Boot
+# Algoritmos sobre Grafos con Spring Boot
 
 Aplicación web desarrollada con **Java 17+** y **Spring Boot 3.x** que expone una **API REST** para ejecutar algoritmos clásicos sobre grafos definidos por el usuario mediante archivos JSON.
 
@@ -14,9 +14,9 @@ El sistema permite probar algoritmos de búsqueda de fuerza bruta y algoritmos v
 
 Además, el proyecto incluye una interfaz web mínima con **Thymeleaf**, donde el usuario puede pegar un JSON, seleccionar el algoritmo y visualizar el resultado de manera gráfica y textual.
 
+---
 
-
-1. Objetivo del proyecto
+## 1. Objetivo del proyecto
 
 El objetivo principal del proyecto es desarrollar una aplicación web capaz de representar grafos y ejecutar sobre ellos distintos algoritmos estudiados en la materia de algoritmos.
 
@@ -31,9 +31,9 @@ El sistema permite analizar:
 * El número de pasos realizados por el algoritmo.
 * El tiempo aproximado de ejecución.
 
+---
 
-
-2. Tecnologías utilizadas
+## 2. Tecnologías utilizadas
 
 El proyecto fue construido utilizando las siguientes tecnologías y dependencias:
 
@@ -48,7 +48,9 @@ El proyecto fue construido utilizando las siguientes tecnologías y dependencias
 | Lombok          | Reducción de código repetitivo en DTO, entidades y servicios |
 | Maven           | Gestión de dependencias y construcción del proyecto          |
 
-3. Dependencias principales
+---
+
+## 3. Dependencias principales
 
 Las dependencias utilizadas en el archivo `pom.xml` son:
 
@@ -90,9 +92,9 @@ Las dependencias utilizadas en el archivo `pom.xml` son:
 </dependencies>
 ```
 
+---
 
-
-4. Estructura general del proyecto
+## 4. Estructura general del proyecto
 
 La estructura principal del proyecto es la siguiente:
 
@@ -137,9 +139,9 @@ src/main/java/com/grafos/algoritmos
     └── UnionFind.java
 ```
 
+---
 
-
-5. Requisitos previos
+## 5. Requisitos previos
 
 Antes de ejecutar el proyecto, se debe contar con lo siguiente instalado:
 
@@ -163,7 +165,7 @@ mvn -version
 
 ---
 
-6. Configuración de base de datos
+## 6. Configuración de base de datos
 
 El proyecto utiliza MySQL para registrar un historial de ejecuciones de los algoritmos.
 
@@ -208,9 +210,9 @@ spring.datasource.password=TU_CONTRASEÑA
 
 ---
 
-7. Instrucciones de ejecución
+## 7. Instrucciones de ejecución
 
-7.1 Clonar el repositorio
+### 7.1 Clonar el repositorio
 
 ```bash
 git clone https://github.com/usuario/nombre-del-repositorio.git
@@ -222,12 +224,17 @@ Ingresar a la carpeta del proyecto:
 cd nombre-del-repositorio
 ```
 
-7.2 Compilar el proyecto
+---
+
+### 7.2 Compilar el proyecto
 
 ```bash
 mvn clean install
 ```
-7.3 Ejecutar el proyecto
+
+---
+
+### 7.3 Ejecutar el proyecto
 
 ```bash
 mvn spring-boot:run
@@ -241,8 +248,9 @@ AlgoritmosGrafosApplication.java
 
 Y presionando el botón de ejecución.
 
+---
 
-7.4 Acceder a la aplicación
+### 7.4 Acceder a la aplicación
 
 La interfaz web estará disponible en:
 
@@ -258,7 +266,7 @@ http://localhost:8080/api
 
 ---
 
-8. Modelo JSON de entrada
+## 8. Modelo JSON de entrada
 
 Todos los algoritmos reciben un JSON con la siguiente estructura general:
 
@@ -1046,8 +1054,9 @@ Ruta de acceso:
 http://localhost:8080/
 ```
 
+---
 
-18. Posibles mejoras futuras
+## 18. Posibles mejoras futuras
 
 Algunas mejoras que pueden agregarse posteriormente son:
 
@@ -1060,8 +1069,9 @@ Algunas mejoras que pueden agregarse posteriormente son:
 * Pruebas unitarias para cada servicio.
 * Documentación automática con Swagger/OpenAPI.
 
+---
 
-19. Conclusión
+## 19. Conclusión
 
 Este proyecto permite aplicar conceptos fundamentales de estructuras de datos, algoritmos de grafos, APIs REST y desarrollo web con Spring Boot.
 
