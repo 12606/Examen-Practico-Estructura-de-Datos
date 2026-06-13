@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ExecutionHistoryRepository extends JpaRepository<ExecutionHistory, Long> {
 
-    List<ExecutionHistory> findTop10ByOrderByCreatedAtDesc();
+    List<ExecutionHistory> findTop20ByOrderByCreatedAtDesc();
 }

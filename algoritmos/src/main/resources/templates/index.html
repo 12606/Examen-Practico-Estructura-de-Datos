@@ -1,59 +1,90 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Algoritmos sobre Grafos</title>
-    <link rel="stylesheet" href="/css/styles.css">
+
+    <!-- Ruta correcta para Spring Boot + Thymeleaf -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/styles.css">
 </head>
 <body>
 
-<div class="container">
+<div class="app">
 
-    <header>
-        <h1>Algoritmos sobre Grafos</h1>
-        <p>
-            Aplicación web con Spring Boot para ejecutar DFS, BFS,
-            profundidad limitada, profundidad iterativa, A*, Kruskal y Prim.
-        </p>
+    <header class="hero">
+        <div>
+            <span class="badge">Spring Boot · API REST · Grafos</span>
+            <h1>Algoritmos sobre Grafos</h1>
+            <p>
+                Aplicación web para ejecutar algoritmos de búsqueda y optimización:
+                DFS, BFS, profundidad limitada, profundidad iterativa, A*, Kruskal y Prim.
+            </p>
+        </div>
     </header>
 
-    <section class="panel">
+    <main class="main-layout">
 
-        <div class="form-group">
-            <label for="algorithm">Seleccione el algoritmo:</label>
-            <select id="algorithm">
-                <option value="/api/dfs">DFS - Búsqueda en profundidad</option>
-                <option value="/api/bfs">BFS - Búsqueda en amplitud</option>
-                <option value="/api/depth-limited">Profundidad limitada</option>
-                <option value="/api/iterative-deepening">Profundidad iterativa</option>
-                <option value="/api/a-star">A*</option>
-                <option value="/api/kruskal">Kruskal</option>
-                <option value="/api/prim">Prim</option>
-            </select>
-        </div>
-
-        <div class="buttons">
-            <button onclick="loadExample()">Cargar ejemplo</button>
-            <button onclick="executeAlgorithm()">Ejecutar algoritmo</button>
-            <button onclick="clearResult()">Limpiar</button>
-        </div>
-
-        <div class="grid">
-            <div>
-                <h2>JSON de entrada</h2>
-                <textarea id="jsonInput"></textarea>
+        <section class="card controls-card">
+            <div class="section-title">
+                <h2>Configuración de ejecución</h2>
+                <p>Seleccione un algoritmo y proporcione el grafo en formato JSON.</p>
             </div>
 
-            <div>
-                <h2>Resultado</h2>
-                <pre id="result"></pre>
+            <div class="form-group">
+                <label for="algorithm">Algoritmo</label>
+                <select id="algorithm">
+                    <option value="/api/dfs">DFS - Búsqueda en profundidad</option>
+                    <option value="/api/bfs">BFS - Búsqueda en amplitud</option>
+                    <option value="/api/depth-limited">Profundidad limitada</option>
+                    <option value="/api/iterative-deepening">Profundidad iterativa</option>
+                    <option value="/api/a-star">A* - Camino más corto</option>
+                    <option value="/api/kruskal">Kruskal - Árbol de expansión mínimo</option>
+                    <option value="/api/prim">Prim - Árbol de expansión mínimo</option>
+                </select>
             </div>
-        </div>
 
-        <h2>Visualización básica</h2>
-        <canvas id="graphCanvas" width="900" height="420"></canvas>
+            <div class="button-row">
+                <button class="btn btn-secondary" onclick="loadExample()">Cargar ejemplo</button>
+                <button class="btn btn-primary" onclick="executeAlgorithm()">Ejecutar algoritmo</button>
+                <button class="btn btn-danger" onclick="clearAll()">Limpiar</button>
+            </div>
+        </section>
 
-    </section>
+        <section class="workspace">
+
+            <article class="card editor-card">
+                <div class="card-header">
+                    <h2>JSON de entrada</h2>
+                    <span class="small-label">Grafo definido por el usuario</span>
+                </div>
+
+                <textarea id="jsonInput" spellcheck="false"></textarea>
+            </article>
+
+            <article class="card result-card">
+                <div class="card-header">
+                    <h2>Resultado</h2>
+                    <span class="small-label">Respuesta JSON del servidor</span>
+                </div>
+
+                <pre id="result">Ejecute un algoritmo para visualizar el resultado.</pre>
+            </article>
+
+        </section>
+
+        <section class="card visualization-card">
+            <div class="card-header">
+                <h2>Visualización básica del grafo</h2>
+                <span class="small-label">Las aristas del camino o MST se resaltan automáticamente</span>
+            </div>
+
+            <div class="canvas-wrapper">
+                <canvas id="graphCanvas" width="1000" height="460"></canvas>
+            </div>
+        </section>
+
+    </main>
 
 </div>
 
@@ -67,11 +98,11 @@
             limit: 4,
             heuristic: "EUCLIDEAN",
             nodes: [
-                { id: "A", x: 100, y: 200 },
-                { id: "B", x: 250, y: 100 },
-                { id: "C", x: 250, y: 300 },
-                { id: "D", x: 450, y: 180 },
-                { id: "E", x: 650, y: 220 }
+                { id: "A", x: 120, y: 240 },
+                { id: "B", x: 300, y: 120 },
+                { id: "C", x: 300, y: 360 },
+                { id: "D", x: 560, y: 230 },
+                { id: "E", x: 820, y: 250 }
             ],
             edges: [
                 { from: "A", to: "B", weight: 4 },
@@ -84,16 +115,24 @@
         };
 
         document.getElementById("jsonInput").value = JSON.stringify(example, null, 2);
+        document.getElementById("result").textContent = "Ejemplo cargado. Presione \"Ejecutar algoritmo\".";
         drawGraph(example, null);
     }
 
     async function executeAlgorithm() {
         const endpoint = document.getElementById("algorithm").value;
-        const inputText = document.getElementById("jsonInput").value;
+        const inputText = document.getElementById("jsonInput").value.trim();
         const resultBox = document.getElementById("result");
+
+        if (!inputText) {
+            resultBox.textContent = "Debe ingresar un JSON válido.";
+            return;
+        }
 
         try {
             const graphJson = JSON.parse(inputText);
+
+            resultBox.textContent = "Ejecutando algoritmo...";
 
             const response = await fetch(endpoint, {
                 method: "POST",
@@ -113,8 +152,13 @@
         }
     }
 
-    function clearResult() {
-        document.getElementById("result").textContent = "";
+    function clearAll() {
+        document.getElementById("jsonInput").value = "";
+        document.getElementById("result").textContent = "Ejecute un algoritmo para visualizar el resultado.";
+
+        const canvas = document.getElementById("graphCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     function drawGraph(graph, result) {
@@ -130,8 +174,8 @@
         const nodeMap = {};
 
         graph.nodes.forEach((node, index) => {
-            const x = node.x !== null && node.x !== undefined ? node.x : 100 + index * 100;
-            const y = node.y !== null && node.y !== undefined ? node.y : 200;
+            const x = node.x !== null && node.x !== undefined ? node.x : 150 + index * 120;
+            const y = node.y !== null && node.y !== undefined ? node.y : 230;
 
             nodeMap[node.id] = { x, y };
         });
@@ -161,26 +205,27 @@
             }
 
             const key = edge.from + "-" + edge.to;
+            const isHighlighted = highlightedEdges.has(key);
 
             ctx.beginPath();
             ctx.moveTo(from.x, from.y);
             ctx.lineTo(to.x, to.y);
-
-            if (highlightedEdges.has(key)) {
-                ctx.strokeStyle = "#2ecc71";
-                ctx.lineWidth = 4;
-            } else {
-                ctx.strokeStyle = "#888";
-                ctx.lineWidth = 2;
-            }
-
+            ctx.strokeStyle = isHighlighted ? "#22c55e" : "#94a3b8";
+            ctx.lineWidth = isHighlighted ? 5 : 2;
             ctx.stroke();
 
             const midX = (from.x + to.x) / 2;
             const midY = (from.y + to.y) / 2;
 
-            ctx.fillStyle = "#222";
-            ctx.font = "14px Arial";
+            ctx.beginPath();
+            ctx.arc(midX, midY, 15, 0, Math.PI * 2);
+            ctx.fillStyle = "#ffffff";
+            ctx.fill();
+
+            ctx.fillStyle = "#0f172a";
+            ctx.font = "bold 14px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
             ctx.fillText(edge.weight ?? 1, midX, midY);
         });
 
@@ -188,15 +233,16 @@
             const position = nodeMap[node.id];
 
             ctx.beginPath();
-            ctx.arc(position.x, position.y, 22, 0, Math.PI * 2);
-            ctx.fillStyle = "#1f6feb";
+            ctx.arc(position.x, position.y, 27, 0, Math.PI * 2);
+            ctx.fillStyle = "#2563eb";
             ctx.fill();
-            ctx.strokeStyle = "#ffffff";
-            ctx.lineWidth = 3;
+
+            ctx.strokeStyle = "#dbeafe";
+            ctx.lineWidth = 5;
             ctx.stroke();
 
             ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 15px Arial";
+            ctx.font = "bold 16px Arial";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText(node.id, position.x, position.y);

@@ -76,11 +76,8 @@ public class PrimService {
                 }
             }
         }
-
         boolean completed = visited.size() == graph.getNodes().size();
-
         long endTime = System.nanoTime();
-
         return AlgorithmResponse.builder()
                 .algorithm("Prim")
                 .visitedOrder(visitedOrder)
